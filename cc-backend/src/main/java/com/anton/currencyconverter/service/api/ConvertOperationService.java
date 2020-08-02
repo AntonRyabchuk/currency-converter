@@ -1,17 +1,17 @@
 package com.anton.currencyconverter.service.api;
 
-import com.anton.currencyconverter.model.User;
-import com.anton.currencyconverter.service.dto.request.ConverOperationForm;
-import com.anton.currencyconverter.service.dto.response.ConvertOperationResponse;
+import com.anton.currencyconverter.domain.entity.User;
+import com.anton.currencyconverter.dto.request.ConvertOperationForm;
+import com.anton.currencyconverter.dto.response.ConvertOperationResponse;
 
 import java.util.Date;
 import java.util.List;
 
 public interface ConvertOperationService {
 
-    Double calculateTargetValue(ConverOperationForm form);
+    Double calculateTargetValue(ConvertOperationForm form);
 
-    ConvertOperationResponse createExchangeOperation(User user, ConverOperationForm form);
+    ConvertOperationResponse createExchangeOperation(User user, ConvertOperationForm form);
 
     List<ConvertOperationResponse> findOperationByDate(User user, Date date);
 }

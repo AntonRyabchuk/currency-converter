@@ -1,9 +1,9 @@
 package com.anton.currencyconverter.utils;
 
-import com.anton.currencyconverter.model.Currency;
-import com.anton.currencyconverter.model.ConvertOperation;
-import com.anton.currencyconverter.service.dto.response.CurrencyResponse;
-import com.anton.currencyconverter.service.dto.response.ConvertOperationResponse;
+import com.anton.currencyconverter.domain.entity.Currency;
+import com.anton.currencyconverter.domain.entity.ConvertOperation;
+import com.anton.currencyconverter.dto.response.CurrencyResponse;
+import com.anton.currencyconverter.dto.response.ConvertOperationResponse;
 
 public class Converters {
 

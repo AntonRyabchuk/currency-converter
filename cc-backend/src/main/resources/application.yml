@@ -1,0 +1,23 @@
+server:
+  port: 9293
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/cc-antonr-db
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    show-sql: false
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+    hibernate:
+      ddl-auto: create
+auth:
+  url: http://127.0.0.1:9293/
+  clientId: my-client
+  clientSecret: secret

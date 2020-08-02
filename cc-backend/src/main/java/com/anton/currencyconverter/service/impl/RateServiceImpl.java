@@ -1,7 +1,7 @@
 package com.anton.currencyconverter.service.impl;
 
-import com.anton.currencyconverter.model.Rate;
-import com.anton.currencyconverter.model.repository.RateRepository;
+import com.anton.currencyconverter.domain.entity.Rate;
+import com.anton.currencyconverter.domain.repository.RateRepository;
 import com.anton.currencyconverter.service.api.CurrencyDataLoader;
 import com.anton.currencyconverter.service.api.RateService;
 import lombok.extern.slf4j.Slf4j;

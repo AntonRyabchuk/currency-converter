@@ -1,6 +1,6 @@
 package com.anton.currencyconverter.service.api;
 
-import com.anton.currencyconverter.model.Currency;
+import com.anton.currencyconverter.domain.entity.Currency;
 
 import java.util.List;
 

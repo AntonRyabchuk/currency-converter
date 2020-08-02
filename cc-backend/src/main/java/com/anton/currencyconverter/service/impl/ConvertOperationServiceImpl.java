@@ -1,16 +1,16 @@
 package com.anton.currencyconverter.service.impl;
 
-import com.anton.currencyconverter.model.Currency;
-import com.anton.currencyconverter.model.ConvertOperation;
-import com.anton.currencyconverter.model.Rate;
-import com.anton.currencyconverter.model.User;
-import com.anton.currencyconverter.model.repository.CurrencyRepository;
-import com.anton.currencyconverter.model.repository.ConvertOperationRepository;
-import com.anton.currencyconverter.model.repository.RateRepository;
+import com.anton.currencyconverter.domain.entity.Currency;
+import com.anton.currencyconverter.domain.entity.ConvertOperation;
+import com.anton.currencyconverter.domain.entity.Rate;
+import com.anton.currencyconverter.domain.entity.User;
+import com.anton.currencyconverter.domain.repository.CurrencyRepository;
+import com.anton.currencyconverter.domain.repository.ConvertOperationRepository;
+import com.anton.currencyconverter.domain.repository.RateRepository;
 import com.anton.currencyconverter.service.api.ConvertOperationService;
 import com.anton.currencyconverter.service.api.RateService;
-import com.anton.currencyconverter.service.dto.request.ConverOperationForm;
-import com.anton.currencyconverter.service.dto.response.ConvertOperationResponse;
+import com.anton.currencyconverter.dto.request.ConvertOperationForm;
+import com.anton.currencyconverter.dto.response.ConvertOperationResponse;
 import com.anton.currencyconverter.utils.Converters;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,7 +38,7 @@ public class ConvertOperationServiceImpl implements ConvertOperationService {
     }
 
     @Override
-    public Double calculateTargetValue(ConverOperationForm form) {
+    public Double calculateTargetValue(ConvertOperationForm form) {
         var currencyFrom = currencyRepository.findById(form.getCurrencyIdFrom()).orElseThrow(() -> new RuntimeException("No such currency found"));
         var currencyTo = currencyRepository.findById(form.getCurrencyIdTo()).orElseThrow(() -> new RuntimeException("No such currency found"));
         var today = new Date();
@@ -50,7 +50,7 @@ public class ConvertOperationServiceImpl implements ConvertOperationService {
     }
 
     @Override
-    public ConvertOperationResponse createExchangeOperation(User user, ConverOperationForm form) {
+    public ConvertOperationResponse createExchangeOperation(User user, ConvertOperationForm form) {
         var currencyFrom = currencyRepository.findById(form.getCurrencyIdFrom()).orElseThrow(() -> new RuntimeException("No such currency found"));
         var currencyTo = currencyRepository.findById(form.getCurrencyIdTo()).orElseThrow(() -> new RuntimeException("No such currency found"));
         var today = new Date();
