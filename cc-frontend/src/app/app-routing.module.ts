@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import {ProtectedGuard, PublicGuard} from "ngx-auth";
+import {HistoryComponent} from "./protected/history/history.component";
 
 
 const routes: Routes = [
@@ -18,6 +19,11 @@ const routes: Routes = [
     path: '',
     redirectTo: 'welcome',
     pathMatch: 'full'
+  },
+  {
+    path: 'history',
+    canActivate: [ ProtectedGuard ],
+    component: HistoryComponent
   },
   {
     path: '**',

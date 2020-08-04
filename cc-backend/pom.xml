@@ -80,7 +80,7 @@
                             <outputDirectory>${project.build.directory}/classes/static/</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>../was-frontend/dist/was-frontend</directory>
+                                    <directory>../cc-frontend/dist/cc-frontend</directory>
                                 </resource>
                             </resources>
                         </configuration>

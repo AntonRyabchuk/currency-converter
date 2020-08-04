@@ -17,8 +17,6 @@ export class WelcomePageComponent {
               ) {  }
 
   onClick() {
-    console.log(this.username);
-    console.log(this.password);
     this.auth.login({username: this.username, password: this.password})
       .subscribe(value => this.router.navigateByUrl("/protected"), error => alert("error"))
   }

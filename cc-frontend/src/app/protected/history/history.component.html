@@ -1,1 +1,43 @@
-<p>history works!</p>
+<h2>История</h2>
+
+<div style="display: table">
+  <div style="display: table-cell">
+      <select [(ngModel)]="currencyFrom">
+        <option *ngFor="let cur of currencies" [ngValue]="cur">{{cur.charCode}} ({{cur.name}})</option>
+      </select>
+  </div>
+  <div style="display: table-cell">
+      <select [(ngModel)]="currencyTo">
+        <option *ngFor="let cur of currencies" [ngValue]="cur">{{cur.charCode}} ({{cur.name}})</option>
+      </select>
+  </div>
+  <div style="display: table-cell">
+    <input type="date"  [ngModel]="operationDate | date:'yyyy-MM-dd'"
+           (ngModelChange)="operationDate = $event">
+  </div>
+  <div style="display: table-cell">
+    <button (click)="findData()">Искать</button>
+  </div>
+</div>
+
+<table>
+  <thead>
+  <tr>
+    <th>Исходная валюта</th>
+    <th>Целевая валюта</th>
+    <th>Исходная сумма</th>
+    <th>Полученная сумма</th>
+    <th>Дата</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr *ngFor="let operation of operationData">
+    <td>{{operation.currencyFrom.charCode}} ({{operation.currencyFrom.name}})</td>
+    <td>{{operation.currencyTo.charCode}} ({{operation.currencyTo.name}})</td>
+    <td>{{operation.valueFrom}}</td>
+    <td>{{operation.valueTo}}</td>
+    <td>{{operation.date|date:'dd-MM-yyyy'}}</td>
+  </tr>
+  </tbody>
+</table>
+<button (click)="logout()">Logout</button>

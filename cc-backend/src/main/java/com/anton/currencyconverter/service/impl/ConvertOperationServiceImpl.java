@@ -11,10 +11,13 @@ import com.anton.currencyconverter.service.api.ConvertOperationService;
 import com.anton.currencyconverter.service.api.RateService;
 import com.anton.currencyconverter.dto.request.ConvertOperationForm;
 import com.anton.currencyconverter.dto.response.ConvertOperationResponse;
+import com.anton.currencyconverter.service.api.UserService;
 import com.anton.currencyconverter.utils.Converters;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -29,12 +32,14 @@ public class ConvertOperationServiceImpl implements ConvertOperationService {
     private final CurrencyRepository currencyRepository;
     private final RateRepository rateRepository;
     private final RateService rateService;
+    private final UserService userService;
 
-    public ConvertOperationServiceImpl(ConvertOperationRepository convertOperationRepository, CurrencyRepository currencyRepository, RateRepository rateRepository, RateService rateService) {
+    public ConvertOperationServiceImpl(ConvertOperationRepository convertOperationRepository, CurrencyRepository currencyRepository, RateRepository rateRepository, RateService rateService, UserService userService) {
         this.convertOperationRepository = convertOperationRepository;
         this.currencyRepository = currencyRepository;
         this.rateRepository = rateRepository;
         this.rateService = rateService;
+        this.userService = userService;
     }
 
     @Override
@@ -46,7 +51,7 @@ public class ConvertOperationServiceImpl implements ConvertOperationService {
         var rateFrom = rateRepository.findByCurrencyAndDate(currencyFrom, today);
         checkRateAvailable(currencyTo);
         var rateTo = rateRepository.findByCurrencyAndDate(currencyTo, today);
-        return form.getValueFrom() * calculateResultRate(rateFrom, rateTo);
+        return round(form.getValueFrom() * calculateResultRate(rateFrom, rateTo), 2);
     }
 
     @Override
@@ -56,7 +61,7 @@ public class ConvertOperationServiceImpl implements ConvertOperationService {
         var today = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
         var rateFrom = rateRepository.findByCurrencyAndDate(currencyFrom, today);
         var rateTo = rateRepository.findByCurrencyAndDate(currencyTo, today);
-        var valueTo = form.getValueFrom() * calculateResultRate(rateFrom, rateTo);
+        var valueTo = round(form.getValueFrom() * calculateResultRate(rateFrom, rateTo), 2);
 
         var operation = new ConvertOperation();
         operation.setUser(user);
@@ -72,10 +77,13 @@ public class ConvertOperationServiceImpl implements ConvertOperationService {
     }
 
     @Override
-    public List<ConvertOperationResponse> findOperationByDate(User user, Date date) {
-        var exchangeOperations = convertOperationRepository.findByUserAndDate(user, date);
-        log.info("IN ExchangeOperationServiceImpl findOperationByDate - exchange operations: {} was loaded", exchangeOperations);
-        return exchangeOperations.stream()
+    public List<ConvertOperationResponse> findAllBy(String currencyIdFrom, String currencyIdTo, Date date) {
+        var user = userService.getUserFromContext();
+        var currencyFrom = currencyRepository.findById(currencyIdFrom).orElseThrow(() -> new RuntimeException("No such currency found"));
+        var currencyTo = currencyRepository.findById(currencyIdTo).orElseThrow(() -> new RuntimeException("No such currency found"));
+        var operations = convertOperationRepository.findAllByUserAndCurrencyFromAndCurrencyToAndDate(user, currencyFrom, currencyTo, date);
+        log.info("IN ExchangeOperationServiceImpl findAllBy - operations: {} was found", operations);
+        return operations.stream()
                 .map(Converters::convertToDto)
                 .collect(Collectors.toList());
     }
@@ -89,5 +97,13 @@ public class ConvertOperationServiceImpl implements ConvertOperationService {
 
     private Double calculateResultRate(Rate rateFrom, Rate rateTo) {
         return (rateFrom.getRate() * rateFrom.getNominal()) / (rateTo.getRate() * rateTo.getNominal());
+    }
+
+    private static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        var bd = new BigDecimal(Double.toString(value));
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 }

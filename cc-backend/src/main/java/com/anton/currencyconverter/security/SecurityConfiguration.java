@@ -27,8 +27,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.cors().and()
                 .authorizeRequests()
-                .anyRequest()
-                .permitAll();
+                .antMatchers("/", "/welcome", "auth/login").permitAll()
+                .anyRequest().authenticated();
     }
 
     @Bean

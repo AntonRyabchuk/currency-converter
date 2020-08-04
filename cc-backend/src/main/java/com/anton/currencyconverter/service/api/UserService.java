@@ -4,6 +4,6 @@ import com.anton.currencyconverter.domain.entity.User;
 
 public interface UserService {
 
-    User getUsernameFromContext();
+    User getUserFromContext();
 
 }

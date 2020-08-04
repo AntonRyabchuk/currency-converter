@@ -13,5 +13,5 @@ public interface ConvertOperationService {
 
     ConvertOperationResponse createConvertOperation(User user, ConvertOperationForm form);
 
-    List<ConvertOperationResponse> findOperationByDate(User user, Date date);
+    List<ConvertOperationResponse> findAllBy(String currencyIdFom, String currencyIdTo, Date date);
 }

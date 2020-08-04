@@ -5,3 +5,7 @@ select {
 input {
   width: 250px;
 }
+
+button {
+  margin-top: 20px;
+}

@@ -44,6 +44,6 @@ export class RootPageComponent implements OnInit {
   }
 
   saveOperation() {
-    this.operationService.createConvertOperation(new ConvertOperation(this.currencyFrom.id, this.currencyTo.id, this.valueFrom));
+    this.operationService.createConvertOperation(new ConvertOperation(this.currencyFrom.id, this.currencyTo.id, this.valueFrom)).subscribe(x => x);
   }
 }
