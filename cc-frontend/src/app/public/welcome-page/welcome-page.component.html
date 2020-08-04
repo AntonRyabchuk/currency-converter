@@ -1,2 +1,10 @@
-<p>welcome-page works!</p>
-<button (click)="onClick()">login</button>
+<h2>Конвертер валют</h2>
+<form>
+  <div>
+    <input type="text" placeholder="логин" name="username" [(ngModel)]="username">
+  </div>
+  <div>
+    <input type="password" placeholder="пароль" name="password" [(ngModel)]="password">
+  </div>
+  <button (click)="onClick()">Войти</button>
+</form>

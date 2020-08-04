@@ -1,6 +1,5 @@
 package com.anton.currencyconverter.security;
 
-import com.anton.currencyconverter.domain.entity.User;
 import com.anton.currencyconverter.domain.repository.UserRepository;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,7 +22,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
-        User user = this.userRepository.findByUsername(s).orElseThrow(() -> new UsernameNotFoundException("User " + s + " not found"));
+        var user = this.userRepository.findByUsername(s).orElseThrow(() -> new UsernameNotFoundException("User " + s + " not found"));
         return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
                 user.getRoles().stream()
                         .map(role -> new SimpleGrantedAuthority(role.getName()))

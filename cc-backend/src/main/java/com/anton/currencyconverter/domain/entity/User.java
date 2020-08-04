@@ -24,7 +24,7 @@ public class User {
 
     private String password;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
     @Override
@@ -38,5 +38,12 @@ public class User {
     @Override
     public int hashCode() {
         return Objects.hash(username);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "username='" + username + '\'' +
+                '}';
     }
 }

@@ -1,2 +1,27 @@
-<p>root-page works!</p>
+<h2>Конвертер</h2>
+<div style="display: table">
+  <div style="display: table-cell">
+    <div>
+      <select [(ngModel)]="currencyFrom" (ngModelChange)="onChange($event)">
+      <option *ngFor="let cur of currencies" [ngValue]="cur">{{cur.charCode}} ({{cur.name}})</option>
+    </select>
+    </div>
+    <div>
+      <input type="number" [(ngModel)]="valueFrom" (ngModelChange)="onChange($event)">
+    </div>
+  </div>
+  <div style="display: table-cell">
+    <div>
+      <select [(ngModel)]="currencyTo" (ngModelChange)="onChange($event)">
+      <option *ngFor="let cur of currencies" [ngValue]="cur">{{cur.charCode}} ({{cur.name}})</option>
+    </select>
+    </div>
+    <div>
+      <input type="number" [(ngModel)]="valueTo">
+    </div>
+  </div>
+</div>
+<div>
+  <button (click)="saveOperation()">Сохранить</button>
+</div>
 <button (click)="logout()">Logout</button>

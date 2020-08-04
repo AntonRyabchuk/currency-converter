@@ -41,19 +41,19 @@ public class ConvertOperationServiceImpl implements ConvertOperationService {
     public Double calculateTargetValue(ConvertOperationForm form) {
         var currencyFrom = currencyRepository.findById(form.getCurrencyIdFrom()).orElseThrow(() -> new RuntimeException("No such currency found"));
         var currencyTo = currencyRepository.findById(form.getCurrencyIdTo()).orElseThrow(() -> new RuntimeException("No such currency found"));
-        var today = new Date();
-        var rateFrom = rateRepository.findByCurrencyAndDate(currencyFrom, today);
+        var today = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
         checkRateAvailable(currencyFrom);
-        var rateTo = rateRepository.findByCurrencyAndDate(currencyTo, today);
+        var rateFrom = rateRepository.findByCurrencyAndDate(currencyFrom, today);
         checkRateAvailable(currencyTo);
+        var rateTo = rateRepository.findByCurrencyAndDate(currencyTo, today);
         return form.getValueFrom() * calculateResultRate(rateFrom, rateTo);
     }
 
     @Override
-    public ConvertOperationResponse createExchangeOperation(User user, ConvertOperationForm form) {
+    public ConvertOperationResponse createConvertOperation(User user, ConvertOperationForm form) {
         var currencyFrom = currencyRepository.findById(form.getCurrencyIdFrom()).orElseThrow(() -> new RuntimeException("No such currency found"));
         var currencyTo = currencyRepository.findById(form.getCurrencyIdTo()).orElseThrow(() -> new RuntimeException("No such currency found"));
-        var today = new Date();
+        var today = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
         var rateFrom = rateRepository.findByCurrencyAndDate(currencyFrom, today);
         var rateTo = rateRepository.findByCurrencyAndDate(currencyTo, today);
         var valueTo = form.getValueFrom() * calculateResultRate(rateFrom, rateTo);

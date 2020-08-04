@@ -11,7 +11,7 @@ public interface ConvertOperationService {
 
     Double calculateTargetValue(ConvertOperationForm form);
 
-    ConvertOperationResponse createExchangeOperation(User user, ConvertOperationForm form);
+    ConvertOperationResponse createConvertOperation(User user, ConvertOperationForm form);
 
     List<ConvertOperationResponse> findOperationByDate(User user, Date date);
 }

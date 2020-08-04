@@ -19,8 +19,8 @@ import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -88,7 +88,6 @@ public class CbrCurrencyDataLoader implements CurrencyDataLoader {
         var rates = new ArrayList<Rate>();
         var currencies = currencyRepository.findAll().stream()
                 .collect(Collectors.toMap(Currency::getId, currency -> currency));
-        var date = new SimpleDateFormat("dd.MM.yyyy").parse(document.getElementsByTagName("ValCurs").item(0).getAttributes().getNamedItem("Date").getTextContent());
 
         for (int i = 0; i < nodeList.getLength(); i++) {
 
@@ -99,7 +98,7 @@ public class CbrCurrencyDataLoader implements CurrencyDataLoader {
                 var currencyIp = element.getAttributes().getNamedItem("ID").getTextContent();
                 if (currencies.containsKey(currencyIp)) {
                     var currency = currencies.get(currencyIp);
-                    var rate = parseRateFromXmlElement(element, currency, date);
+                    var rate = parseRateFromXmlElement(element, currency);
                     rates.add(rate);
                 }
             }
@@ -116,7 +115,7 @@ public class CbrCurrencyDataLoader implements CurrencyDataLoader {
         return currency;
     }
 
-    private Rate parseRateFromXmlElement(Element element, Currency currency, Date date) throws ParseException {
+    private Rate parseRateFromXmlElement(Element element, Currency currency) throws ParseException {
         var rate = new Rate();
         rate.setCurrency(currency);
         rate.setNominal(Integer.parseInt(element.getElementsByTagName("Nominal").item(0).getTextContent()));
@@ -125,7 +124,8 @@ public class CbrCurrencyDataLoader implements CurrencyDataLoader {
         var value = format.parse(element.getElementsByTagName("Value").item(0).getTextContent());
         rate.setRate(value.doubleValue());
 
-        rate.setDate(date);
+        var today = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        rate.setDate(today);
 
         return rate;
     }
@@ -135,12 +135,5 @@ public class CbrCurrencyDataLoader implements CurrencyDataLoader {
         var requestParam = "?date_req=";
         var today = date.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
         return source_data_url + requestParam + today;
-    }
-
-    private Set<String> getCurrencyIpSet() {
-        var currencies = currencyRepository.findAll();
-        return currencies.stream()
-                .map(Currency::getId)
-                .collect(Collectors.toSet());
     }
 }
