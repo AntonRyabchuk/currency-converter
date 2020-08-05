@@ -12,6 +12,7 @@ import com.anton.currencyconverter.service.api.RateService;
 import com.anton.currencyconverter.dto.request.ConvertOperationForm;
 import com.anton.currencyconverter.dto.response.ConvertOperationResponse;
 import com.anton.currencyconverter.service.api.UserService;
+import com.anton.currencyconverter.service.exceptions.CurrencyException;
 import com.anton.currencyconverter.utils.Converters;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -44,8 +45,8 @@ public class ConvertOperationServiceImpl implements ConvertOperationService {
 
     @Override
     public Double calculateTargetValue(ConvertOperationForm form) {
-        var currencyFrom = currencyRepository.findById(form.getCurrencyIdFrom()).orElseThrow(() -> new RuntimeException("No such currency found"));
-        var currencyTo = currencyRepository.findById(form.getCurrencyIdTo()).orElseThrow(() -> new RuntimeException("No such currency found"));
+        var currencyFrom = currencyRepository.findById(form.getCurrencyIdFrom()).orElseThrow(() -> new CurrencyException("No such currency found"));
+        var currencyTo = currencyRepository.findById(form.getCurrencyIdTo()).orElseThrow(() -> new CurrencyException("No such currency found"));
         var today = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
         checkRateAvailable(currencyFrom);
         var rateFrom = rateRepository.findByCurrencyAndDate(currencyFrom, today);
@@ -96,7 +97,7 @@ public class ConvertOperationServiceImpl implements ConvertOperationService {
     }
 
     private Double calculateResultRate(Rate rateFrom, Rate rateTo) {
-        return (rateFrom.getRate() * rateFrom.getNominal()) / (rateTo.getRate() * rateTo.getNominal());
+        return (rateFrom.getRate() / rateFrom.getNominal()) / (rateTo.getRate() / rateTo.getNominal());
     }
 
     private static double round(double value, int places) {
